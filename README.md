@@ -2,6 +2,7 @@
 [![CodeQL](https://github.com/Uptycs/kubequery/workflows/CodeQL/badge.svg?branch=master)](https://github.com/Uptycs/kubequery/actions?query=workflow%3ACodeQL)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Uptycs/kubequery)](https://goreportcard.com/report/github.com/Uptycs/kubequery)
 [![FOSSA Status](https://app.fossa.com/api/projects/custom%2B22616%2Fgit%40github.com%3AUptycs%2Fkubequery.git.svg?type=shield)](https://app.fossa.com/projects/custom%2B22616%2Fgit%40github.com%3AUptycs%2Fkubequery.git?ref=badge_shield) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
+[![License: GPL-2.0/Apache-2.0](https://img.shields.io/badge/license-GPL--2.0%2FApache--2.0-orange)](https://opensource.org/licenses/Apache-2.0)
 
 ---
 

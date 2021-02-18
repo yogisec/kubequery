@@ -20,9 +20,12 @@ import (
 
 	osquery "github.com/Uptycs/basequery-go"
 	"github.com/Uptycs/basequery-go/plugin/table"
+	"github.com/Uptycs/kubequery/internal/common"
+	"github.com/Uptycs/kubequery/internal/istio"
+	istiotables "github.com/Uptycs/kubequery/internal/istio/tables"
 	"github.com/Uptycs/kubequery/internal/k8s"
 	"github.com/Uptycs/kubequery/internal/k8s/event"
-	"github.com/Uptycs/kubequery/internal/k8s/tables"
+	k8stables "github.com/Uptycs/kubequery/internal/k8s/tables"
 )
 
 var (
@@ -42,6 +45,10 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("Error connecting to kubernetes API server: %s", err))
 	}
+	err = istio.Init()
+	if err != nil {
+		panic(fmt.Sprintf("Error connecting to kubernetes API server: %s", err))
+	}
 
 	// TODO: Version
 	server, err := osquery.NewExtensionManagerServer(
@@ -58,8 +65,10 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 
-	for _, t := range tables.GetTables() {
-		server.RegisterPlugin(table.NewPlugin(t.Name, t.Columns, t.GenFunc))
+	for _, tables := range [...][]common.Table{k8stables.GetTables(), istiotables.GetTables()} {
+		for _, t := range tables {
+			server.RegisterPlugin(table.NewPlugin(t.Name, t.Columns, t.GenFunc))
+		}
 	}
 
 	go func() {

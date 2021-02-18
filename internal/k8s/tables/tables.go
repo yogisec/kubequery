@@ -10,7 +10,7 @@
 package tables
 
 import (
-	"github.com/Uptycs/basequery-go/plugin/table"
+	"github.com/Uptycs/kubequery/internal/common"
 	"github.com/Uptycs/kubequery/internal/k8s/admissionregistration"
 	"github.com/Uptycs/kubequery/internal/k8s/apps"
 	"github.com/Uptycs/kubequery/internal/k8s/autoscaling"
@@ -24,87 +24,80 @@ import (
 	"github.com/Uptycs/kubequery/internal/k8s/storage"
 )
 
-// Table structure holds Osquery extension table definition.
-type Table struct {
-	Name    string
-	Columns []table.ColumnDefinition
-	GenFunc table.GenerateFunc
-}
-
-// GetTables returns the definition of all the tables supported by this extension.
-func GetTables() []Table {
-	return []Table{
+// GetTables returns the definition of all core Kubernetes tables supported by this extension.
+func GetTables() []common.Table {
+	return []common.Table{
 		// Admission Registration
-		{"kubernetes_mutating_webhooks", admissionregistration.MutatingWebhookColumns(), admissionregistration.MutatingWebhooksGenerate},
-		{"kubernetes_validating_webhooks", admissionregistration.ValidatingWebhookColumns(), admissionregistration.ValidatingWebhooksGenerate},
+		{Name: "kubernetes_mutating_webhooks", Columns: admissionregistration.MutatingWebhookColumns(), GenFunc: admissionregistration.MutatingWebhooksGenerate},
+		{Name: "kubernetes_validating_webhooks", Columns: admissionregistration.ValidatingWebhookColumns(), GenFunc: admissionregistration.ValidatingWebhooksGenerate},
 
 		// Apps
-		{"kubernetes_daemon_sets", apps.DaemonSetColumns(), apps.DaemonSetsGenerate},
-		{"kubernetes_daemon_set_containers", apps.DaemonSetContainerColumns(), apps.DaemonSetContainersGenerate},
-		{"kubernetes_daemon_set_volumes", apps.DaemonSetVolumeColumns(), apps.DaemonSetVolumesGenerate},
-		{"kubernetes_deployments", apps.DeploymentColumns(), apps.DeploymentsGenerate},
-		{"kubernetes_deployments_containers", apps.DeploymentContainerColumns(), apps.DeploymentContainersGenerate},
-		{"kubernetes_deployments_volumes", apps.DeploymentVolumeColumns(), apps.DeploymentVolumesGenerate},
-		{"kubernetes_replica_sets", apps.ReplicaSetColumns(), apps.ReplicaSetsGenerate},
-		{"kubernetes_replica_set_containers", apps.ReplicaSetContainerColumns(), apps.ReplicaSetContainersGenerate},
-		{"kubernetes_replica_set_volumes", apps.ReplicaSetVolumeColumns(), apps.ReplicaSetVolumesGenerate},
-		{"kubernetes_stateful_sets", apps.StatefulSetColumns(), apps.StatefulSetsGenerate},
-		{"kubernetes_stateful_set_containers", apps.StatefulSetContainerColumns(), apps.StatefulSetContainersGenerate},
-		{"kubernetes_stateful_set_volumes", apps.StatefulSetVolumeColumns(), apps.StatefulSetVolumesGenerate},
+		{Name: "kubernetes_daemon_sets", Columns: apps.DaemonSetColumns(), GenFunc: apps.DaemonSetsGenerate},
+		{Name: "kubernetes_daemon_set_containers", Columns: apps.DaemonSetContainerColumns(), GenFunc: apps.DaemonSetContainersGenerate},
+		{Name: "kubernetes_daemon_set_volumes", Columns: apps.DaemonSetVolumeColumns(), GenFunc: apps.DaemonSetVolumesGenerate},
+		{Name: "kubernetes_deployments", Columns: apps.DeploymentColumns(), GenFunc: apps.DeploymentsGenerate},
+		{Name: "kubernetes_deployments_containers", Columns: apps.DeploymentContainerColumns(), GenFunc: apps.DeploymentContainersGenerate},
+		{Name: "kubernetes_deployments_volumes", Columns: apps.DeploymentVolumeColumns(), GenFunc: apps.DeploymentVolumesGenerate},
+		{Name: "kubernetes_replica_sets", Columns: apps.ReplicaSetColumns(), GenFunc: apps.ReplicaSetsGenerate},
+		{Name: "kubernetes_replica_set_containers", Columns: apps.ReplicaSetContainerColumns(), GenFunc: apps.ReplicaSetContainersGenerate},
+		{Name: "kubernetes_replica_set_volumes", Columns: apps.ReplicaSetVolumeColumns(), GenFunc: apps.ReplicaSetVolumesGenerate},
+		{Name: "kubernetes_stateful_sets", Columns: apps.StatefulSetColumns(), GenFunc: apps.StatefulSetsGenerate},
+		{Name: "kubernetes_stateful_set_containers", Columns: apps.StatefulSetContainerColumns(), GenFunc: apps.StatefulSetContainersGenerate},
+		{Name: "kubernetes_stateful_set_volumes", Columns: apps.StatefulSetVolumeColumns(), GenFunc: apps.StatefulSetVolumesGenerate},
 
 		// Autoscaling
-		{"kubernetes_horizontal_pod_autoscalers", autoscaling.HorizontalPodAutoscalersColumns(), autoscaling.HorizontalPodAutoscalerGenerate},
+		{Name: "kubernetes_horizontal_pod_autoscalers", Columns: autoscaling.HorizontalPodAutoscalersColumns(), GenFunc: autoscaling.HorizontalPodAutoscalerGenerate},
 
 		// Batch
-		{"kubernetes_cron_jobs", batch.CronJobColumns(), batch.CronJobsGenerate},
-		{"kubernetes_jobs", batch.JobColumns(), batch.JobsGenerate},
+		{Name: "kubernetes_cron_jobs", Columns: batch.CronJobColumns(), GenFunc: batch.CronJobsGenerate},
+		{Name: "kubernetes_jobs", Columns: batch.JobColumns(), GenFunc: batch.JobsGenerate},
 
 		// Core
-		{"kubernetes_config_maps", core.ConfigMapColumns(), core.ConfigMapsGenerate},
-		{"kubernetes_endpoint_subsets", core.EndpointSubsetColumns(), core.EndpointSubsetsGenerate},
-		{"kubernetes_limit_ranges", core.LimitRangeColumns(), core.LimitRangesGenerate},
-		{"kubernetes_namespaces", core.NamespaceColumns(), core.NamespacesGenerate},
-		{"kubernetes_nodes", core.NodeColumns(), core.NodesGenerate},
-		{"kubernetes_persistent_volume_claims", core.PersistentVolumeClaimColumns(), core.PersistentVolumeClaimsGenerate},
-		{"kubernetes_persistent_volumes", core.PersistentVolumeColumns(), core.PersistentVolumesGenerate},
-		{"kubernetes_pod_templates", core.PodTemplateColumns(), core.PodTemplatesGenerate},
-		{"kubernetes_pod_template_containers", core.PodTemplateContainerColumns(), core.PodTemplateContainersGenerate},
-		{"kubernetes_pod_templates_volumes", core.PodTemplateVolumeColumns(), core.PodTemplateVolumesGenerate},
-		{"kubernetes_pods", core.PodColumns(), core.PodsGenerate},
-		{"kubernetes_pod_containers", core.PodContainerColumns(), core.PodContainersGenerate},
-		{"kubernetes_pod_volumes", core.PodVolumeColumns(), core.PodVolumesGenerate},
-		{"kubernetes_resource_quotas", core.ResourceQuotaColumns(), core.ResourceQuotasGenerate},
-		{"kubernetes_secrets", core.SecretColumns(), core.SecretsGenerate},
-		{"kubernetes_service_accounts", core.ServiceAccountColumns(), core.ServiceAccountsGenerate},
-		{"kubernetes_services", core.ServiceColumns(), core.ServicesGenerate},
+		{Name: "kubernetes_config_maps", Columns: core.ConfigMapColumns(), GenFunc: core.ConfigMapsGenerate},
+		{Name: "kubernetes_endpoint_subsets", Columns: core.EndpointSubsetColumns(), GenFunc: core.EndpointSubsetsGenerate},
+		{Name: "kubernetes_limit_ranges", Columns: core.LimitRangeColumns(), GenFunc: core.LimitRangesGenerate},
+		{Name: "kubernetes_namespaces", Columns: core.NamespaceColumns(), GenFunc: core.NamespacesGenerate},
+		{Name: "kubernetes_nodes", Columns: core.NodeColumns(), GenFunc: core.NodesGenerate},
+		{Name: "kubernetes_persistent_volume_claims", Columns: core.PersistentVolumeClaimColumns(), GenFunc: core.PersistentVolumeClaimsGenerate},
+		{Name: "kubernetes_persistent_volumes", Columns: core.PersistentVolumeColumns(), GenFunc: core.PersistentVolumesGenerate},
+		{Name: "kubernetes_pod_templates", Columns: core.PodTemplateColumns(), GenFunc: core.PodTemplatesGenerate},
+		{Name: "kubernetes_pod_template_containers", Columns: core.PodTemplateContainerColumns(), GenFunc: core.PodTemplateContainersGenerate},
+		{Name: "kubernetes_pod_templates_volumes", Columns: core.PodTemplateVolumeColumns(), GenFunc: core.PodTemplateVolumesGenerate},
+		{Name: "kubernetes_pods", Columns: core.PodColumns(), GenFunc: core.PodsGenerate},
+		{Name: "kubernetes_pod_containers", Columns: core.PodContainerColumns(), GenFunc: core.PodContainersGenerate},
+		{Name: "kubernetes_pod_volumes", Columns: core.PodVolumeColumns(), GenFunc: core.PodVolumesGenerate},
+		{Name: "kubernetes_resource_quotas", Columns: core.ResourceQuotaColumns(), GenFunc: core.ResourceQuotasGenerate},
+		{Name: "kubernetes_secrets", Columns: core.SecretColumns(), GenFunc: core.SecretsGenerate},
+		{Name: "kubernetes_service_accounts", Columns: core.ServiceAccountColumns(), GenFunc: core.ServiceAccountsGenerate},
+		{Name: "kubernetes_services", Columns: core.ServiceColumns(), GenFunc: core.ServicesGenerate},
 
 		// Discovery
-		{"kubernetes_api_resources", discovery.APIResourceColumns(), discovery.APIResourcesGenerate},
-		{"kubernetes_info", discovery.InfoColumns(), discovery.InfoGenerate},
+		{Name: "kubernetes_api_resources", Columns: discovery.APIResourceColumns(), GenFunc: discovery.APIResourcesGenerate},
+		{Name: "kubernetes_info", Columns: discovery.InfoColumns(), GenFunc: discovery.InfoGenerate},
 
 		// Event
-		{"kubernetes_events", event.Columns(), event.Generate},
+		{Name: "kubernetes_events", Columns: event.Columns(), GenFunc: event.Generate},
 
 		// Networking
-		{"kubernetes_ingress_classes", networking.IngressClassColumns(), networking.IngressClassesGenerate},
-		{"kubernetes_ingresses", networking.IngressColumns(), networking.IngressesGenerate},
-		{"kubernetes_network_policies", networking.NetworkPolicyColumns(), networking.NetworkPoliciesGenerate},
+		{Name: "kubernetes_ingress_classes", Columns: networking.IngressClassColumns(), GenFunc: networking.IngressClassesGenerate},
+		{Name: "kubernetes_ingresses", Columns: networking.IngressColumns(), GenFunc: networking.IngressesGenerate},
+		{Name: "kubernetes_network_policies", Columns: networking.NetworkPolicyColumns(), GenFunc: networking.NetworkPoliciesGenerate},
 
 		// Policy
-		{"kubernetes_pod_disruption_budgets", policy.PodDisruptionBudgetColumns(), policy.PodDisruptionBudgetsGenerate},
-		{"kubernetes_pod_security_policies", policy.PodSecurityPolicyColumns(), policy.PodSecurityPoliciesGenerate},
+		{Name: "kubernetes_pod_disruption_budgets", Columns: policy.PodDisruptionBudgetColumns(), GenFunc: policy.PodDisruptionBudgetsGenerate},
+		{Name: "kubernetes_pod_security_policies", Columns: policy.PodSecurityPolicyColumns(), GenFunc: policy.PodSecurityPoliciesGenerate},
 
 		// RBAC
-		{"kubernetes_cluster_role_binding_subjects", rbac.ClusterRoleBindingSubjectColumns(), rbac.ClusterRoleBindingSubjectsGenerate},
-		{"kubernetes_cluster_role_policy_rules", rbac.ClusterRolePolicyRuleColumns(), rbac.ClusterRolePolicyRulesGenerate},
-		{"kubernetes_role_binding_subjects", rbac.RoleBindingSubjectColumns(), rbac.RoleBindingSubjectsGenerate},
-		{"kubernetes_role_policy_rules", rbac.RolePolicyRuleColumns(), rbac.RolePolicyRulesGenerate},
+		{Name: "kubernetes_cluster_role_binding_subjects", Columns: rbac.ClusterRoleBindingSubjectColumns(), GenFunc: rbac.ClusterRoleBindingSubjectsGenerate},
+		{Name: "kubernetes_cluster_role_policy_rules", Columns: rbac.ClusterRolePolicyRuleColumns(), GenFunc: rbac.ClusterRolePolicyRulesGenerate},
+		{Name: "kubernetes_role_binding_subjects", Columns: rbac.RoleBindingSubjectColumns(), GenFunc: rbac.RoleBindingSubjectsGenerate},
+		{Name: "kubernetes_role_policy_rules", Columns: rbac.RolePolicyRuleColumns(), GenFunc: rbac.RolePolicyRulesGenerate},
 
 		// Storage
-		{"kubernetes_csi_drivers", storage.CSIDriverColumns(), storage.CSIDriversGenerate},
-		{"kubernetes_csi_node_drivers", storage.CSINodeDriverColumns(), storage.CSINodeDriversGenerate},
-		{"kubernetes_storage_capacities", storage.CSIStorageCapacityColumns(), storage.CSIStorageCapacitiesGenerate},
-		{"kubernetes_storage_classes", storage.SGClassColumns(), storage.SGClassesGenerate},
-		{"kubernetes_volume_attachments", storage.VolumeAttachmentColumns(), storage.VolumeAttachmentsGenerate},
+		{Name: "kubernetes_csi_drivers", Columns: storage.CSIDriverColumns(), GenFunc: storage.CSIDriversGenerate},
+		{Name: "kubernetes_csi_node_drivers", Columns: storage.CSINodeDriverColumns(), GenFunc: storage.CSINodeDriversGenerate},
+		{Name: "kubernetes_storage_capacities", Columns: storage.CSIStorageCapacityColumns(), GenFunc: storage.CSIStorageCapacitiesGenerate},
+		{Name: "kubernetes_storage_classes", Columns: storage.SGClassColumns(), GenFunc: storage.SGClassesGenerate},
+		{Name: "kubernetes_volume_attachments", Columns: storage.VolumeAttachmentColumns(), GenFunc: storage.VolumeAttachmentsGenerate},
 	}
 }
