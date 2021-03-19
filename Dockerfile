@@ -36,8 +36,6 @@ RUN set -ex; \
 
 COPY entrypoint.sh /opt/kubequery/entrypoint.sh
 
-# NOTE: Not running as root breaks bunch of Osquery tables. But Osquery tables are meaningless
-#       in the context of kubequery as the pod is ephemeral in nature
 USER kubequery
 
 WORKDIR /opt/kubequery
