@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   kubequery:
   - apiVersion: v2
+    appVersion: 1.0.4
+    created: "2021-08-13T04:44:39.521973812Z"
+    description: kubequery powered by Osquery
+    digest: 6a4392b80f3edd2cc471e18e2b5caff826cd97cfd7a68cfd1f3253d58083ffdb
+    icon: https://raw.githubusercontent.com/Uptycs/kubequery/master/kubequery.png
+    name: kubequery
+    type: application
+    urls:
+    - https://github.com/Uptycs/kubequery/releases/download/kubequery-1.0.4/kubequery-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
     appVersion: 1.0.3
     created: "2021-08-13T04:22:12.358418812Z"
     description: kubequery powered by Osquery
@@ -23,4 +34,4 @@ entries:
     urls:
     - https://github.com/Uptycs/kubequery/releases/download/kubequery-1.0.2/kubequery-1.0.2.tgz
     version: 1.0.2
-generated: "2021-08-13T04:22:12.358434311Z"
+generated: "2021-08-13T04:44:39.521988312Z"
